@@ -1,0 +1,11 @@
+{
+  "name": "tweetify",
+  "version": "1.0.0",
+  "description": "Take text and other options and construct a tweet-able string",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thomas Stringer",
+  "license": "ISC"
+}
