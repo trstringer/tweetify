@@ -16,7 +16,8 @@ var tweetify = require('tweetify');
 var tweet = {
     text: 'check out my new blog post!',
     prefix: {
-        
+        container: 'brackets', // or 'curley-brackets'
+        divider: ': '
     }
 };
 ```
