@@ -1,14 +1,14 @@
-#Tweetify
+# Tweetify
 
 *The tweet-formatting module to make it easy*
 
-##Install
+## Install
 
 ```
 npm install tweetify
 ```
 
-##Usage
+## Usage
 
 ```javascript
 var tweetify = require('tweetify');
