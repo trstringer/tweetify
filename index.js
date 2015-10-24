@@ -8,6 +8,57 @@ function formatHashtag(hashtag) {
     return hashtag;
 }
 
+function generatePrefix(prefix) {
+    var prefixText = '';
+    if (prefix.text !== undefined) {
+        switch (prefix.container) {
+            case 'curley-brackets':
+                prefixText = '{' + prefix.text + '}';
+                break;
+            case 'brackets':
+            default:
+                prefixText = '[' + prefix.text + ']';
+                break;
+        }
+        prefixText += prefix.divider === undefined ? ': ' : prefix.divider;
+    }
+    
+    return prefixText;
+}
+
+function breakTextOnSpaces(input, maxCharLength, firstMaxCharLength) {
+    var brokenInput = [];
+    if (input.length > (firstMaxCharLength === undefined ? maxCharLength : firstMaxCharLength)) {
+        var progressiveInput = input;
+        var sliceAt;
+        var i = 0;
+        var effectiveMaxCharLength;
+        do {
+            if (i === 0 && firstMaxCharLength !== undefined) {
+                effectiveMaxCharLength = firstMaxCharLength;
+            }
+            else {
+                effectiveMaxCharLength = maxCharLength;
+            }
+            if (progressiveInput.length > effectiveMaxCharLength) {
+                sliceAt = progressiveInput[effectiveMaxCharLength - 1] === ' ' ? effectiveMaxCharLength - 1 : progressiveInput.slice(0, effectiveMaxCharLength - 1).lastIndexOf(' ');
+                brokenInput[i] = progressiveInput.slice(0, sliceAt).trim();
+                progressiveInput = progressiveInput.slice(sliceAt + 1).trim();
+            }
+            else {
+                brokenInput[i] = progressiveInput;
+                progressiveInput = '';
+            }
+            i++;
+        } while (progressiveInput !== '');
+    }
+    else {
+        brokenInput[0] = input;
+    }
+    
+    return brokenInput;
+}
+
 function formatTweet(tweet) {
     var cutOff;
     if (tweet.cutOff === undefined) {
@@ -17,24 +68,11 @@ function formatTweet(tweet) {
         cutOff = tweet.cutOff;
     }
     
-    var formattedTweet = '';
+    var prefixText = '';
     
     if (tweet.prefix !== undefined) {
-        if (tweet.prefix.text !== undefined) {
-            switch (tweet.prefix.container) {
-                case 'curley-brackets':
-                    formattedTweet = '{' + tweet.prefix.text + '}';
-                    break;
-                case 'brackets':
-                default:
-                    formattedTweet = '[' + tweet.prefix.text + ']';
-                    break;
-            }
-            formattedTweet += tweet.prefix.divider === undefined ? ': ' : tweet.prefix.divider;
-        }
+        prefixText += generatePrefix(tweet.prefix);
     }
-    
-    formattedTweet += tweet.text;
     
     var hashtagText = '';
     if (tweet.hashtags !== undefined) {
@@ -43,16 +81,33 @@ function formatTweet(tweet) {
         }
     }
     
-    if ((formattedTweet.length + hashtagText.length) > twitterMaxCharCount) {
-        if (formattedTweet[twitterMaxCharCount - cutOff.length - hashtagText.length - 1] === ' ') {
-            formattedTweet = formattedTweet.substring(0, twitterMaxCharCount - cutOff.length - hashtagText.length - 1) + cutOff + hashtagText;
+    var firstTweetCharLength = twitterMaxCharCount - prefixText.length - hashtagText.length - cutOff.length;
+    var remainingTweetCharLength = twitterMaxCharCount - hashtagText.length - cutOff.length;
+    
+    var brokenText = breakTextOnSpaces(tweet.text, remainingTweetCharLength, firstTweetCharLength);
+    
+    var formattedTweets = [];
+    
+    for (var i = 0; i < brokenText.length; i++) {
+        if (i === 0) {
+            formattedTweets[i] = prefixText + brokenText[i] + cutOff + hashtagText;
         }
         else {
-            formattedTweet = formattedTweet.substring(0, formattedTweet.substring(0, twitterMaxCharCount - cutOff.length - hashtagText.length - 1).lastIndexOf(' ')) + cutOff + hashtagText;
+            if (tweet.wrap === undefined || !tweet.wrap) {
+                break;
+            }
+            else {
+                if (i === brokenText.length - 1) {
+                    formattedTweets[i] = brokenText[i] + hashtagText;
+                }
+                else {
+                    formattedTweets[i] = brokenText[i] + cutOff + hashtagText;
+                }
+            }
         }
     }
     
-    return formattedTweet;
+    return formattedTweets;
 }
 
 module.exports = formatTweet;

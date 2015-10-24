@@ -24,10 +24,18 @@ var tweet = {
         text: 'Blog Post',
         divider: ': ' // other example... ' - ', ' :: ', etc.
     },
-    hashtags: ['javascript', 'node'] // don't need prefixing #
+    hashtags: ['javascript', 'node'], // don't need prefixing #
+    // if you only want a single tweet (truncated if too many 
+    // chars) then either don't defined 'wrap' or set it to 
+    // false. but if you want all of the text to be tweeted 
+    // then set 'wrap' to true and overflow text will be broken 
+    // into multiple tweets
+    wrap: true
 };
 
-var formattedTweet = tweetify(tweet);
+var tweets = tweetify(tweet);
 
-console.log(formattedTweet);
+for (var i = 0; i < tweets.length; i++) {
+    console.log(tweets[i]);
+}
 ```
