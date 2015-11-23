@@ -90,7 +90,13 @@ function formatTweet(tweet) {
     
     for (var i = 0; i < brokenText.length; i++) {
         if (i === 0) {
-            formattedTweets[i] = prefixText + brokenText[i] + cutOff + hashtagText;
+            if (brokenText.length === 1) {
+                // no need for a cutoff text if there is a single tweet
+                formattedTweets[i] = prefixText + brokenText[i] + hashtagText;
+            }
+            else {
+                formattedTweets[i] = prefixText + brokenText[i] + cutOff + hashtagText;
+            }
         }
         else {
             if (tweet.wrap === undefined || !tweet.wrap) {
