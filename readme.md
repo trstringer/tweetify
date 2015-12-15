@@ -34,7 +34,16 @@ var tweet = {
     // false. but if you want all of the text to be tweeted 
     // then set 'wrap' to true and overflow text will be broken 
     // into multiple tweets
-    wrap: true
+    wrap: true,
+    //
+    // (optional) if you want to add a link to the tweet then specify 
+    // it here. you can also opt to have it wrap to all wrapped 
+    // tweets. if wrap is undefined or false then the link will only 
+    // be displayed for the first tweet
+    link: {
+        url: '<your_url>',
+        wrap: true // optional, defaults to false
+    }
 };
 
 var tweets = tweetify(tweet);
