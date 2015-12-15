@@ -80,9 +80,16 @@ function formatTweet(tweet) {
             hashtagText += ' ' + formatHashtag(tweet.hashtags[i]);
         }
     }
-    
+        
     var firstTweetCharLength = twitterMaxCharCount - prefixText.length - hashtagText.length - cutOff.length;
     var remainingTweetCharLength = twitterMaxCharCount - hashtagText.length - cutOff.length;
+    
+    if (tweet.link && tweet.link.url) {
+        firstTweetCharLength -= tweet.link.url.length;
+        if (tweet.link.wrap && tweet.link.wrap === true) {
+            remainingTweetCharLength -= tweet.link.url.length;
+        }
+    }
     
     var brokenText = breakTextOnSpaces(tweet.text, remainingTweetCharLength, firstTweetCharLength);
     
@@ -96,6 +103,10 @@ function formatTweet(tweet) {
             }
             else {
                 formattedTweets[i] = prefixText + brokenText[i] + cutOff + hashtagText;
+            }
+            
+            if (tweet.link && tweet.link.url) {
+                formattedTweets[i] += ' ' + tweet.link.url;
             }
         }
         else {
