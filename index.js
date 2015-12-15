@@ -120,6 +120,10 @@ function formatTweet(tweet) {
                 else {
                     formattedTweets[i] = brokenText[i] + cutOff + hashtagText;
                 }
+                
+                if (tweet.link && tweet.link.url && tweet.link.wrap && tweet.link.wrap === true) {
+                    formattedTweets[i] += ' ' + tweet.link.url;
+                }
             }
         }
     }
