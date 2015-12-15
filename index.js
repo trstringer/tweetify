@@ -1,4 +1,11 @@
-var twitterMaxCharCount = 140;
+const twitterMaxCharCount = 140;
+// need to figure out the best way to cache this daily 
+// so that it isn't hardcoded
+//
+// refs:
+//      https://dev.twitter.com/overview/t.co
+//      https://dev.twitter.com/rest/reference/get/help/configuration
+const urlLength = 23;
 
 function formatHashtag(hashtag) {
     if (hashtag.substring(0, 1) !== '#') {
@@ -85,9 +92,9 @@ function formatTweet(tweet) {
     var remainingTweetCharLength = twitterMaxCharCount - hashtagText.length - cutOff.length;
     
     if (tweet.link && tweet.link.url) {
-        firstTweetCharLength -= tweet.link.url.length;
+        firstTweetCharLength -= urlLength;
         if (tweet.link.wrap && tweet.link.wrap === true) {
-            remainingTweetCharLength -= tweet.link.url.length;
+            remainingTweetCharLength -= urlLength;
         }
     }
     
